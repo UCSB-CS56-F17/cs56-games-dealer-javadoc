@@ -1,0 +1,102 @@
+<project default="compile">
+
+<!-- build.xml for Mantis issue 0000473
+       name: Jeremy White and Andrew Cooney for CS56, W12 -->
+<!-- updated in F16 -->
+
+<property environment="env"/>
+<!-- load the environment variables -->
+<property name="webRoot" value="${env.HOME}/public_html/"/>
+<property name="webBaseUrl" value="http://www.cs.ucsb.edu/~${env.USER}"/>
+<property name="course" value="cs56"/>
+<property name="quarter" value="F16"/>
+<property name="issueNum" value="0000473"/>
+<property name="projectName" value="dealer"/>
+<property name="projectPath" value="${course}/${quarter}/issues/${issueNum}"/>
+<property name="javadocDest" value="${webRoot}/${projectPath}/javadoc"/>
+<property name="javadocURL" value="${webBaseUrl}/${projectName}/javadoc"/>
+<property name="fullPkg" value="edu.ucsb.cs56.projects.games.${projectName}" />
+<property name="mainClass" value="${fullPkg}.Main"/>
+<property name="mainClassGUI" value="${fullPkg}.MainGui"/>
+
+<path id="project.class.path">
+  <pathelement location="build"/>
+  <pathelement location="lib/junit-4.8.2.jar"/>
+</path>
+
+
+<target name="compile" description="compile my code">
+  <mkdir dir="build" />
+  <javac srcdir="src" destdir="build" debug="true" debuglevel="lines,source" includeantruntime="false">
+    <classpath refid="project.class.path" />
+  </javac>
+</target>
+
+<target name="run" depends="compile" description="run program">
+        <java classname="${mainClass}" classpath="build" fork="true" />
+</target>
+
+<target name="runGUI" depends="compile" description="run GUI of program">
+  <java classname="${mainClassGUI}" classpath="build" fork="true" />
+</target>
+
+<target name="clean" description="Clean up directory">
+  <delete failonerror="false" verbose="true" dir="build" />
+  <delete dir="javadoc" quiet="true"/>
+  <delete dir="dist" quiet="true"/>
+  <delete dir="download" quiet="true"/>
+  <delete dir="temp" quiet="true"/>
+</target>
+
+<target name="javadoc" depends="compile" description="create javadoc">
+  <delete dir="javadoc" quiet="true"/>
+  <javadoc destdir="javadoc" author="true" version="true" use="true">
+    <fileset dir="src" includes="**/*.java"/>
+    <classpath refid="project.class.path" />
+  </javadoc>
+ <!-- F16: We don't really need to copy javadoc to public_html since we don't host any website server.
+	If you have one and want to publish online, 
+	you need to uncomment the following code, and finish the syntax of the actual comment
+	Also you need to change the property at the beginning of this file.
+
+ <!- delete the old javadoc 
+  <delete quiet="true" dir="${javadocDest}"/>
+
+  <!- copy everything you just made to the javadoc destination, and then make it readable 
+  <copy todir="${javadocDest}">
+    <fileset dir="javadoc"/>
+  </copy>
+  <!- Note: this only does the chmod command on the 
+       javadoc subdirectory and its contents.  You MIGHT have to
+       MANUALLY do the chmod on the parent directories.  However,
+       you should only need to do that once. 
+  <chmod dir="${javadocDest}" perm="755" type="dir" includes="**"/>
+  <chmod dir="${javadocDest}" perm="755" type="file" includes="**/*"/>
+  <echo>Javadoc deployed to ${javadocURL}</echo> 
+ -->
+</target>
+
+<target name="jar" depends="compile" description="make the jar file">
+  <mkdir dir="dist"/>
+  <jar destfile="dist/${projectName}.jar" basedir="build">
+    <manifest>
+     <!-- <attribute name="Main-Class" value="edu.ucsb.cs56.W12.cooney.${mainClass}"/>-->
+	<attribute name="Main-Class" value="${mainClassGUI}"/>
+    </manifest>
+  </jar>
+</target>
+
+<target name="test" depends="compile" description="run a JUnit tests">
+  <junit haltonerror="no" haltonfailure="no">
+    <classpath refid="project.class.path" />
+    <batchtest fork="yes">
+      <fileset dir="src">
+	<include name="**/*Test.java" />
+      </fileset>
+    </batchtest>
+    <formatter type="brief" usefile="false" />
+  </junit>
+</target>
+
+
+</project>
