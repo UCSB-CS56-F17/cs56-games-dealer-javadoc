@@ -53,7 +53,7 @@
       <fileset dir="javadoc" />
     </delete>
     <javadoc destdir="javadoc">
-      <fileset dir="src/edu/ucsb/cs56/projects/games/cs56-games-dealer-javadoc/" >
+      <fileset dir="src/edu/ucsb/cs56/cs56-games-dealer-javadoc/" >
 	      <include name="*.java"/>
       </fileset>
       <classpath refid="project.class.path" />
