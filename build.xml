@@ -48,21 +48,34 @@
   <delete dir="temp" quiet="true"/>
 </target>
 
-    <target name="javadoc" depends="compile" description="makes the javadoc descriptions">
-        <delete dir="javadoc" quiet="true" />
-        <javadoc  destdir="javadoc" author="true" version="true" use="true" >
-            <fileset dir="src" includes="**/*.java"/>
-            <classpath refid="project.class.path" />
-        </javadoc>
-        <delete quiet="true" dir="${javadocDest}" />
-        <copy todir="${javadocDest}" >
-            <fileset dir="javadoc"/>
-        </copy>
-        <chmod dir="${javadocDest}" perm="755"  type="dir" includes="**" />
-        <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
-        <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
-        <echo> or if not on CSIL, try file:///${javadocDest}/index.html</echo>
-    </target>
+  <target name="javadoc" depends="compile" description="generate javadoc">
+    <delete quiet="true">
+      <fileset dir="javadoc" />
+    </delete>
+    <javadoc destdir="javadoc">
+      <fileset dir="src/edu/ucsb/cs56/projects/games/roguelike/" >
+	      <include name="*.java"/>
+      </fileset>
+      <classpath refid="project.class.path" />
+      <link href="https://docs.oracle.com/javase/8/docs/api/" /> 
+    </javadoc>
+    <echo>                                                                                       
+      javadoc written to file://${javadoc_absolute_path}/index.html                              
+      copying to ${public_javadoc_absolute_path}/index.html                                      
+    </echo>                                                                                      
+    <delete quiet="true">                                                                        
+      <fileset dir="${public_javadoc_absolute_path}" />                                          
+    </delete>                                                                                    
+    <mkdir dir="${public_javadoc_absolute_path}" />                                              
+    <copy todir="${public_javadoc_absolute_path}">                                               
+      <fileset dir="javadoc" />                                                                  
+    </copy>                                                                                      
+    <echo>                                                                                       
+      javadoc copied to ${public_javadoc_absolute_path}/index.html                               
+      TO PUBLISH: cd into that repo, then git add javadoc;                                       
+        git commit -m "update javadoc"; git push origin gh-pages                                
+    </echo>                                                                                      
+  </target>
  
 <target name="jar" depends="compile" description="make the jar file">
   <mkdir dir="dist"/>
