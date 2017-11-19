@@ -48,11 +48,13 @@
   <delete dir="temp" quiet="true"/>
 </target>
 
+
 <target name="javadoc" depends="compile" description="create javadoc">
   <delete dir="javadoc" quiet="true"/>
   <javadoc destdir="javadoc" author="true" version="true" use="true">
     <fileset dir="src" includes="**/*.java"/>
     <classpath refid="project.class.path" />
+    <link href="https://docs.oracle.com/javase/8/docs/api/" />  
   </javadoc>
  <!-- F16: We don't really need to copy javadoc to public_html since we don't host any website server.
 	If you have one and want to publish online, 
@@ -74,8 +76,19 @@
   <chmod dir="${javadocDest}" perm="755" type="file" includes="**/*"/>
   <echo>Javadoc deployed to ${javadocURL}</echo> 
  -->
+ <echo>
+ </echo>
+ <delete quiet="true">
+   <fileset dir="${public_javadoc_path}" />
+ </delete>
+ <mkdir dir = "${public_javadoc_path}" />
+ <copy todir="${public_javadoc_path}">
+   <fileset dir ="javadoc" />
+ </copy>
+ <echo>
+ </echo>
 </target>
-
+ 
 <target name="jar" depends="compile" description="make the jar file">
   <mkdir dir="dist"/>
   <jar destfile="dist/${projectName}.jar" basedir="build">
