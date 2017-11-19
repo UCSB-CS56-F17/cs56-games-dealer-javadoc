@@ -49,45 +49,34 @@
 </target>
 
 
-<target name="javadoc" depends="compile" description="create javadoc">
-  <delete dir="javadoc" quiet="true"/>
-  <javadoc destdir="javadoc" author="true" version="true" use="true">
-    <fileset dir="src" includes="**/*.java"/>
-    <classpath refid="project.class.path" />
-    <link href="https://docs.oracle.com/javase/8/docs/api/" />  
-  </javadoc>
- <!-- F16: We don't really need to copy javadoc to public_html since we don't host any website server.
-	If you have one and want to publish online, 
-	you need to uncomment the following code, and finish the syntax of the actual comment
-	Also you need to change the property at the beginning of this file.
-
- <!- delete the old javadoc 
-  <delete quiet="true" dir="${javadocDest}"/>
-
-  <!- copy everything you just made to the javadoc destination, and then make it readable 
-  <copy todir="${javadocDest}">
-    <fileset dir="javadoc"/>
-  </copy>
-  <!- Note: this only does the chmod command on the 
-       javadoc subdirectory and its contents.  You MIGHT have to
-       MANUALLY do the chmod on the parent directories.  However,
-       you should only need to do that once. 
-  <chmod dir="${javadocDest}" perm="755" type="dir" includes="**"/>
-  <chmod dir="${javadocDest}" perm="755" type="file" includes="**/*"/>
-  <echo>Javadoc deployed to ${javadocURL}</echo> 
- -->
- <echo>
- </echo>
- <delete quiet="true">
-   <fileset dir="${public_javadoc_path}" />
- </delete>
- <mkdir dir = "${public_javadoc_path}" />
- <copy todir="${public_javadoc_path}">
-   <fileset dir ="javadoc" />
- </copy>
- <echo>
- </echo>
-</target>
+<target name="javadoc" depends="compile" description="generate javadoc">
+    <delete quiet="true">
+      <fileset dir="javadoc" />
+    </delete>
+    <javadoc destdir="javadoc">
+      <fileset dir="src" >
+	      <include name="*.java"/>
+      </fileset>
+      <classpath refid="project.class.path" />
+      <link href="https://docs.oracle.com/javase/8/docs/api/" />          
+    </javadoc>
+    <echo>                                                                                       
+      javadoc written to file://${javadoc_path}/index.html                              
+      copying to ${public_javadoc_path}/index.html                                      
+    </echo>                                                                                      
+    <delete quiet="true">                                                                        
+      <fileset dir="${public_javadoc_path}" />                                          
+    </delete>                                                                                    
+    <mkdir dir="${public_javadoc_path}" />                                              
+    <copy todir="${public_javadoc_path}">                                               
+      <fileset dir="javadoc" />                                                                  
+    </copy>                                                                                      
+    <echo>                                                                                       
+      javadoc copied to ${public_javadoc_path}/index.html                               
+      TO PUBLISH: cd into that repo, then git add javadoc;                                       
+        git commit -m "update javadoc"; git push origin master                               
+    </echo>                                                                                     
+  </target>
  
 <target name="jar" depends="compile" description="make the jar file">
   <mkdir dir="dist"/>
