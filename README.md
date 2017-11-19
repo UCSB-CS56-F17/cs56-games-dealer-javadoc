@@ -16,7 +16,9 @@ What is this?
 =============
 
 This is an interface with classes such as card, deck, and hand that can be used to make card games. 
-Dealer itself is an application to shuffle a deck of 52 playing cards and deal them to the user using command lines. 
+Dealer itself is an application to shuffle a deck of 52 playing cards and deal them to the user using command lines.
+
+Javadoc : https://ucsb-cs56-f17.github.io/cs56-games-dealer-javadoc/javadoc/index.html
 
 
 How To Run
